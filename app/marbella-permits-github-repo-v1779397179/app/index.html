@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Marbella Permits — Renovation permit wizard</title>
+<meta name="description" content="Generate your complete Marbella renovation permit dossier in 10 minutes. UI in EN/ES/NL/FR/DE, Spanish-compliant output documents." />
+<link rel="icon" type="image/svg+xml" href="../brand/favicon.svg" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:wght@500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="app.css" />
+<!-- JSZip + jsPDF for dossier packaging — loaded from CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app-bar">
+  <div class="wordmark">Marbella Permits<span class="dot">.</span></div>
+  <div style="display:flex; align-items:center; gap:1rem;">
+    <span id="mp-lang-host"></span>
+    <a class="exit-link" href="../index.html">← marbellapermits.com</a>
+  </div>
+</div>
+
+<div class="container">
+  <div id="wizard"></div>
+</div>
+
+<!-- Regular scripts (no ES modules) so the wizard works opened from disk too.
+     i18n.js defines t()/TRANSLATIONS; i18n-wiz.js adds tf() + wizard/PDF strings
+     and must load before rules.js (which calls t() in the fee formulas). -->
+<script src="i18n.js"></script>
+<script src="i18n-wiz.js"></script>
+<script src="wiz_es.js"></script>
+<script src="wiz_nl.js"></script>
+<script src="wiz_fr.js"></script>
+<script src="wiz_de.js"></script>
+<script src="rules.js"></script>
+<script src="templates.js"></script>
+<script src="pdf-builder.js"></script>
+<script src="app.js"></script>
+
+<!-- Mount the language switcher into the app bar. Runs after i18n.js has set
+     the current language, so the dropdown shows the right value. Changing it
+     calls tSet(), which re-renders the wizard in the chosen language. -->
+<script>
+  (function () {
+    function mount() {
+      var host = document.getElementById("mp-lang-host");
+      if (host && !host.firstChild && typeof buildLangSwitcher === "function") {
+        var sel = buildLangSwitcher();
+        sel.style.cssText = "background:transparent;border:1px solid var(--mp-rule,#d8d2c8);border-radius:4px;padding:0.35rem 0.5rem;font:inherit;font-size:0.85rem;color:var(--mp-ink,#2b2b2b);cursor:pointer;";
+        host.appendChild(sel);
+      }
+    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", mount);
+    } else {
+      mount();
+    }
+  })();
+</script>
+
+</body>
+</html>
