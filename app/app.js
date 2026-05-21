@@ -556,6 +556,134 @@ function renderFees(c) {
   $("#next-btn").addEventListener("click", () => next());
 }
 
+// ---------- deterministic in-wizard "stuck on a step" helper ----------
+// Native <details> accordion mirroring the downloaded booklet, fully localized
+// from the existing pdf.cl.* / tr.* strings. No JS wiring, no backend, no cost.
+function renderStepHelp(data, fees) {
+  const e = escapeHtml;
+  const list = items => `<ul class="help-list">${items.map(i => `<li>${e(i)}</li>`).join("")}</ul>`;
+  const p = (txt, cls) => `<p${cls ? ` class="${cls}"` : ""}>${e(txt)}</p>`;
+  const note = (kind, title, body) =>
+    `<div class="banner ${kind}" style="margin:0.6rem 0;">${title ? `<strong>${e(title)}</strong> ` : ""}${e(body)}</div>`;
+  const bank = (title, rows) =>
+    `<div class="help-bank"><div class="help-bank-title">${e(title)}</div>${
+      rows.map(([l, v]) => `<div class="help-bank-row"><span>${e(l)}</span><strong>${e(v)}</strong></div>`).join("")
+    }</div>`;
+  const step = (n, title, inner) =>
+    `<details class="help-step"><summary><span class="help-step-n">${n}</span>${e(title)}</summary><div class="help-step-body">${inner}</div></details>`;
+
+  const ownerLabel = data.owner_type === "company"
+    ? (data.company_name || "[your company]")
+    : (data.owner_name || "[your name]");
+  const intl = t("pdf.cl.intl_note");
+
+  // Step 2 documents
+  const docs2 = [
+    t("pdf.cl.s2.d1"), t("pdf.cl.s2.d2"),
+    tf("pdf.cl.s2.d3", { ref: data.catastral_reference || "[your reference]" }),
+    t("pdf.cl.s2.d4"),
+  ];
+  if (data.owner_type === "company") docs2.push(t("pdf.cl.s2.d_company"));
+  // Step 7 documents
+  const docs7 = [
+    t("pdf.cl.s7.fd1"), t("pdf.cl.s7.fd2"), t("pdf.cl.s7.fd3"), t("pdf.cl.s7.fd4"),
+    t("pdf.cl.s7.fd5"), t("pdf.cl.s7.fd6"), t("pdf.cl.s7.fd7"), t("pdf.cl.s7.fd8"),
+  ];
+  if (data.owner_type === "company") { docs7.push(t("pdf.cl.s7.fd_company1")); docs7.push(t("pdf.cl.s7.fd_company2")); }
+
+  const steps = [
+    step(1, t("pdf.cl.s1.title"),
+      p(t("pdf.cl.find_file") + " 01-form-to-sign.pdf") + p(t("pdf.cl.do_in_order")) +
+      list([t("pdf.cl.s1.b1"), t("pdf.cl.s1.b2"), t("pdf.cl.s1.b3"), t("pdf.cl.s1.b4"), t("pdf.cl.s1.b5"), t("pdf.cl.s1.b6")]) +
+      note("ok", t("pdf.cl.done"), t("pdf.cl.s1.done"))),
+    step(2, t("pdf.cl.s2.title"),
+      p(t("pdf.cl.s2.intro")) + list(docs2) + note("ok", t("pdf.cl.done"), t("pdf.cl.s2.done"))),
+    step(3, t("pdf.cl.s3.title"),
+      p(t("pdf.cl.find_file_folder") + " 03-first-email.pdf") + p(t("pdf.cl.do_in_order")) +
+      list([t("pdf.cl.s3.b1"), t("pdf.cl.s3.b2"), t("pdf.cl.s3.b3"), t("pdf.cl.s3.b4"), t("pdf.cl.s3.b5"), t("pdf.cl.s3.b6")]) +
+      note("info", t("pdf.cl.s3.wait_title"), t("pdf.cl.s3.wait_body")) + note("ok", t("pdf.cl.done"), t("pdf.cl.s3.done"))),
+    step(4, t("pdf.cl.s4.title"),
+      p(t("pdf.cl.s4.intro")) + p(t("pdf.cl.amount_to_pay")) +
+      `<div class="help-amount">${e(fmtEUR(fees.license_fee))}</div>` +
+      bank(t("pdf.cl.s4.bank_title"), [
+        [t("pdf.cl.bank.name"), "Unicaja Banco"],
+        [t("pdf.cl.bank.account"), "ES59 2103 1001 5702 3000 0222"],
+        [t("pdf.cl.bank.intl"), "UCJAES2M  " + intl],
+        [t("pdf.cl.bank.concept"), tf("pdf.cl.s4.concept", { owner: ownerLabel })],
+      ]) +
+      note("info", t("pdf.cl.s4.where_title"), t("pdf.cl.s4.where_body")) +
+      note("warn", t("pdf.cl.keep_receipt_title"), t("pdf.cl.s4.keep_receipt_body")) +
+      note("ok", t("pdf.cl.done"), t("pdf.cl.s4.done"))),
+    step(5, t("pdf.cl.s5.title"),
+      p(t("pdf.cl.s5.intro")) + p(t("pdf.cl.amount_to_pay")) +
+      `<div class="help-amount">${e(fmtEUR(fees.waste_deposit))}</div>` +
+      p(tf("pdf.cl.s5.calc", { formula: fees.waste_formula })) +
+      bank(t("pdf.cl.s5.bank_title"), [
+        [t("pdf.cl.bank.name"), "BBVA"],
+        [t("pdf.cl.bank.holder"), "Ayuntamiento de Marbella"],
+        [t("pdf.cl.bank.account"), "ES73 0182 5918 4502 0150 6063"],
+        [t("pdf.cl.bank.intl"), "BBVAESMMXXX  " + intl],
+        [t("pdf.cl.bank.concept"), `"Fianza ${fees.waste_deposit.toLocaleString("es-ES")} € — ${data.property_address || "[your address]"}"`],
+      ]) +
+      note("warn", t("pdf.cl.keep_receipt_title"), t("pdf.cl.s5.keep_receipt_body")) +
+      note("ok", t("pdf.cl.done"), t("pdf.cl.s5.done"))),
+    step(6, t("pdf.cl.s6.title"),
+      p(t("pdf.cl.s6.intro")) + p(t("pdf.cl.find_file_short") + " 04-second-email.pdf") + p(t("pdf.cl.do_in_order")) +
+      list([t("pdf.cl.s6.b1"), t("pdf.cl.s6.b2"), t("pdf.cl.s6.b3"), t("pdf.cl.s6.b4"), t("pdf.cl.s6.b5")]) +
+      note("ok", t("pdf.cl.done"), t("pdf.cl.s6.done"))),
+    step(7, t("pdf.cl.s7.title"),
+      note("warn", t("pdf.cl.s7.need_title"), t("pdf.cl.s7.need_body")) +
+      p(t("pdf.cl.s7.ready")) +
+      list([t("pdf.cl.s7.b1"), t("pdf.cl.s7.b2"), t("pdf.cl.s7.b3"), t("pdf.cl.s7.b4"), t("pdf.cl.s7.b5"), t("pdf.cl.s7.b6"), t("pdf.cl.s7.b7")]) +
+      note("error", t("pdf.cl.s7.dept_title"), t("pdf.cl.s7.dept_body")) +
+      p(t("pdf.cl.s7.attach")) + list(docs7) +
+      p(t("pdf.cl.s7.submit")) +
+      note("ok", t("pdf.cl.s7.proof_title"), t("pdf.cl.s7.proof_body")) +
+      p(t("pdf.cl.s7.youre_done"))),
+  ].join("");
+
+  const trouble = step("!", t("pdf.cl.tr.header"),
+    `<p><strong>${e(t("pdf.cl.tr.h1"))}</strong></p>` + p(t("pdf.cl.tr.b1")) +
+    `<p><strong>${e(t("pdf.cl.tr.h2"))}</strong></p>` + p(t("pdf.cl.tr.b2")) +
+    `<p><strong>${e(t("pdf.cl.tr.h3"))}</strong></p>` + p(t("pdf.cl.tr.b3")) +
+    `<p><strong>${e(t("pdf.cl.tr.h4"))}</strong></p>` + p(t("pdf.cl.tr.b4")) +
+    note("info", "", t("pdf.cl.help")));
+
+  // Self-contained styles so the helper renders correctly even if a stale app.css
+  // is deployed. Identical to the .help-* rules in app.css; harmless if both load.
+  const HELP_CSS = `<style>
+  .help-panel{border:1px solid var(--mp-rule,#E6E2DC);border-radius:6px;background:var(--mp-paper,#FAF8F4);margin:1.5rem 0;overflow:hidden}
+  .help-panel>summary{cursor:pointer;padding:1rem 1.25rem;font-weight:600;font-family:var(--mp-serif,Georgia,serif);font-size:1.05rem;list-style:none;display:flex;align-items:center;gap:.55rem}
+  .help-panel>summary::-webkit-details-marker{display:none}
+  .help-panel>summary::before{content:"\\25B8";color:var(--mp-terracotta,#C8512C)}
+  .help-panel[open]>summary::before{content:"\\25BE"}
+  .help-panel-intro{padding:0 1.25rem .75rem;color:var(--mp-ink-2,#3A3A3A);font-size:.9rem}
+  .help-steps{padding:0 1.25rem 1.25rem}
+  .help-step{border:1px solid var(--mp-rule,#E6E2DC);border-radius:4px;background:var(--mp-paper-2,#fff);margin-bottom:.5rem}
+  .help-step>summary{cursor:pointer;padding:.75rem 1rem;font-weight:500;list-style:none;display:flex;align-items:center;gap:.6rem}
+  .help-step>summary::-webkit-details-marker{display:none}
+  .help-step>summary::before{content:"+";color:var(--mp-terracotta,#C8512C);font-weight:700;width:.9rem;display:inline-block;text-align:center}
+  .help-step[open]>summary::before{content:"\\2013"}
+  .help-step-n{font-family:var(--mp-serif,Georgia,serif);font-weight:700;color:var(--mp-terracotta,#C8512C);min-width:1.1rem}
+  .help-step-body{padding:.25rem 1rem 1rem;font-size:.92rem;color:var(--mp-ink-2,#3A3A3A)}
+  .help-step-body p{margin:.5rem 0}
+  .help-list{margin:.4rem 0;padding-left:1.25rem}.help-list li{margin-bottom:.3rem}
+  .help-bank{background:var(--mp-paper,#FAF8F4);border:1px solid var(--mp-rule,#E6E2DC);border-left:3px solid var(--mp-terracotta,#C8512C);border-radius:4px;padding:.75rem 1rem;margin:.6rem 0}
+  .help-bank-title{font-weight:600;margin-bottom:.4rem}
+  .help-bank-row{display:flex;justify-content:space-between;gap:1rem;font-size:.88rem;padding:.15rem 0}
+  .help-bank-row span{color:var(--mp-mute,#6B6B6B)}.help-bank-row strong{text-align:right;word-break:break-word}
+  .help-amount{font-family:var(--mp-serif,Georgia,serif);font-size:1.3rem;font-weight:700;color:var(--mp-terracotta,#C8512C);margin:.3rem 0}
+  </style>`;
+  return `
+    ${HELP_CSS}
+    <details class="help-panel" open>
+      <summary>${e(t("wiz.help.panel_title", "Stuck on a step? Open the step-by-step helper"))}</summary>
+      <div class="help-panel-intro">${e(t("wiz.help.intro", "Click a step to open it. This is the same guide as your downloaded PDF. If you're still stuck after reading, call or email us."))}</div>
+      <div class="help-steps">${steps}${trouble}</div>
+    </details>
+  `;
+}
+
 function renderDossier(c) {
   const exempt = !!state.data._exempt;
   const fees = exempt ? null : calculateFees(state.data);
@@ -633,6 +761,8 @@ function renderDossier(c) {
         <h3 style="margin-bottom: 0.5rem;">${t("wiz.dos.preview_title")}</h3>
         <pre class="preview">${escapeHtml(dr.body)}</pre>
       </div>
+
+      ${renderStepHelp(state.data, fees)}
 
       <div class="banner info" style="margin-top: 2rem;">
         <strong>${t("wiz.dos.next_title")}</strong>${t("wiz.dos.next_body")}
