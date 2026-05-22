@@ -315,6 +315,9 @@ if (typeof TRANSLATIONS !== "undefined") {
   "pdf.eg.stops_body": "Dans l'un de ces cas, revenez sur marbellapermits.com et relancez l'assistant. Nous préparerons un dossier DR complet pour vous.",
   "pdf.eg.resale_title": "Diligence raisonnable lors de la revente",
   "pdf.eg.resale_body": "Lorsque vous vendrez le bien, le notaire ou l'avocat de l'acheteur pourra vous demander si des travaux de rénovation ont été réalisés et s'ils ont été autorisés. Remettez-leur cette auto-certification — elle montre que les travaux étaient légalement exemptés, avec la référence réglementaire. C'est exactement ce dont ils ont besoin pour valider la diligence raisonnable.",
-  "pdf.eg.footer": "02 · Ce qu'il faut conserver · Marbella Permits"
+  "pdf.eg.footer": "02 · Ce qu'il faut conserver · Marbella Permits",
+  "wiz.help.panel_title": "Bloqué à une étape ? Ouvrez l’aide pas à pas",
+  "wiz.help.intro": "Cliquez sur une étape pour l’ouvrir. C’est le même guide que votre PDF téléchargé — utilisez celui que vous préférez. Si vous êtes toujours bloqué après lecture, appelez-nous ou écrivez-nous.",
+  "wiz.help.ask": "Une question sur votre permis"
 });
 }

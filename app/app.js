@@ -674,8 +674,14 @@ function renderStepHelp(data, fees) {
   .help-bank-row span{color:var(--mp-mute,#6B6B6B)}.help-bank-row strong{text-align:right;word-break:break-word}
   .help-amount{font-family:var(--mp-serif,Georgia,serif);font-size:1.3rem;font-weight:700;color:var(--mp-terracotta,#C8512C);margin:.3rem 0}
   </style>`;
+  // Inline "Ask" button — only when the AI assistant is actually configured/loaded.
+  const askBtn = (typeof window !== "undefined" && typeof window.mpAssistantOpen === "function")
+    ? `<button type="button" class="btn btn-ghost" id="mpa-inline" style="margin:0 0 .5rem;">💬 ${e(t("wiz.help.ask", "Ask about your permit"))}</button>`
+    : "";
+
   return `
     ${HELP_CSS}
+    ${askBtn}
     <details class="help-panel" open>
       <summary>${e(t("wiz.help.panel_title", "Stuck on a step? Open the step-by-step helper"))}</summary>
       <div class="help-panel-intro">${e(t("wiz.help.intro", "Click a step to open it. This is the same guide as your downloaded PDF. If you're still stuck after reading, call or email us."))}</div>
@@ -784,6 +790,8 @@ function renderDossier(c) {
   $("#reset-btn").addEventListener("click", () => {
     if (confirm(t("wiz.dos.startover_confirm"))) resetState();
   });
+  const askInline = $("#mpa-inline");
+  if (askInline) askInline.addEventListener("click", () => { if (window.mpAssistantOpen) window.mpAssistantOpen(); });
 }
 
 // ---------- dossier packaging ----------

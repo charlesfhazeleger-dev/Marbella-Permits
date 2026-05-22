@@ -189,6 +189,11 @@ const WIZ_EN = {
   "wiz.exempt.toast_generating": "Generating self-certification…",
   "wiz.exempt.toast_done": "Self-certification downloaded",
 
+  // ---- in-wizard step helper (deterministic, no backend) ----
+  "wiz.help.panel_title": "Stuck on a step? Open the step-by-step helper",
+  "wiz.help.intro": "Click a step to open it. This is the same guide as your downloaded PDF — use whichever you prefer. If you're still stuck after reading, call or email us.",
+  "wiz.help.ask": "Ask about your permit",
+
   // ===================== PDF: instruction booklet (00-START-HERE) =====================
   "pdf.cl.header": "Marbella Permits · Step-by-step guide",
   "pdf.cl.eyebrow": "You're in the right place — start reading from here",

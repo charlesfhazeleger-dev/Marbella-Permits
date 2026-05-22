@@ -315,6 +315,9 @@ if (typeof TRANSLATIONS !== "undefined") {
   "pdf.eg.stops_body": "Kehren Sie in jedem dieser Fälle zu marbellapermits.com zurück und starten Sie den Assistenten erneut. Wir erstellen ein vollständiges DR-Paket für Sie.",
   "pdf.eg.resale_title": "Due-Diligence-Prüfung beim Verkauf",
   "pdf.eg.resale_body": "Wenn Sie die Immobilie irgendwann verkaufen, kann der Anwalt des Käufers fragen, ob Renovierungsarbeiten durchgeführt wurden und ob diese genehmigt waren. Übergeben Sie ihm diese Selbstzertifizierung — sie zeigt, dass die Arbeiten rechtlich befreit waren, mit dem Artikelverweis. Genau das brauchen sie für die Due-Diligence-Prüfung.",
-  "pdf.eg.footer": "02 · Was aufzubewahren ist · Marbella Permits"
+  "pdf.eg.footer": "02 · Was aufzubewahren ist · Marbella Permits",
+  "wiz.help.panel_title": "Bei einem Schritt nicht weiter? Öffnen Sie die Schritt-für-Schritt-Hilfe",
+  "wiz.help.intro": "Klicken Sie auf einen Schritt, um ihn zu öffnen. Dies ist dieselbe Anleitung wie Ihr heruntergeladenes PDF — nutzen Sie, was Ihnen lieber ist. Wenn Sie nach dem Lesen noch nicht weiterkommen, rufen Sie uns an oder schreiben Sie uns.",
+  "wiz.help.ask": "Frage zu Ihrer Genehmigung"
 });
 }

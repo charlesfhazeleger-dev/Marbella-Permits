@@ -315,6 +315,9 @@ if (typeof TRANSLATIONS !== "undefined") {
   "pdf.eg.stops_body": "En cualquiera de esos casos, vuelve a marbellapermits.com y ejecuta de nuevo el asistente. Te generaremos un paquete completo de DR.",
   "pdf.eg.resale_title": "Diligencia debida en la venta",
   "pdf.eg.resale_body": "Cuando vendas el inmueble, el abogado del comprador puede preguntar si se realizaron obras de reforma y si estaban autorizadas. Entrega esta autodeclaración — demuestra que la obra estaba legalmente exenta, con la referencia del artículo correspondiente. Es exactamente lo que necesitan para cerrar la diligencia debida.",
-  "pdf.eg.footer": "02 · Qué conservar en tus archivos · Marbella Permits"
+  "pdf.eg.footer": "02 · Qué conservar en tus archivos · Marbella Permits",
+  "wiz.help.panel_title": "¿Atascado en algún paso? Abre la guía paso a paso",
+  "wiz.help.intro": "Haz clic en un paso para abrirlo. Es la misma guía que tu PDF descargado — usa la que prefieras. Si sigues atascado después de leerla, llámanos o escríbenos.",
+  "wiz.help.ask": "Pregunta sobre tu licencia"
 });
 }

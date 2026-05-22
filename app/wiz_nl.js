@@ -315,6 +315,9 @@ if (typeof TRANSLATIONS !== "undefined") {
   "pdf.eg.stops_body": "Kom in dat geval terug naar marbellapermits.com en voer de assistent opnieuw uit. We stellen een volledig DR-pakket voor u op.",
   "pdf.eg.resale_title": "Due diligence bij verkoop",
   "pdf.eg.resale_body": "Als u het pand uiteindelijk verkoopt, kan de advocaat van de koper vragen of er renovatiewerken zijn uitgevoerd en of deze vergund waren. Geef hem of haar deze zelfverklaring — die toont dat de werken wettelijk vrijgesteld waren, met de wetsverwijzing. Dat is precies wat nodig is voor de due diligence.",
-  "pdf.eg.footer": "02 · Wat u moet bewaren · Marbella Permits"
+  "pdf.eg.footer": "02 · Wat u moet bewaren · Marbella Permits",
+  "wiz.help.panel_title": "Vastgelopen bij een stap? Open de stapsgewijze hulp",
+  "wiz.help.intro": "Klik op een stap om die te openen. Dit is dezelfde gids als uw gedownloade pdf — gebruik wat u het prettigst vindt. Komt u er na het lezen nog niet uit, bel of mail ons dan.",
+  "wiz.help.ask": "Vraag over uw vergunning"
 });
 }
